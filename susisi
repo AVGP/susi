@@ -22,7 +22,7 @@ function convertFilesInPath(inputPath, outputPath, layoutPath) {
     layoutHTML = fs.readFileSync(layoutPath, 'utf8');
   }
   
-  fs.readdir('input', function(pathErr, files) {
+  fs.readdir(inputPath, function(pathErr, files) {
     files.forEach(function(file) {
       if(file.substr(-2) != 'md') return;
       renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html', layoutHTML);

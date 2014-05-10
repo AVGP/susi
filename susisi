@@ -29,6 +29,10 @@ function convertFilesInPath(inputPath, outputPath, layoutPath) {
         return;
       } else if(file.substr(-2) != 'md') return;
 
+      if(!fs.existsSync(outputPath)) { 
+        fs.mkdirSync(outputPath);
+      }
+
       renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html', layoutHTML);
     });
   });

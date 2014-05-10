@@ -8,7 +8,7 @@
     "marked": "0.3.2"  
   },
   "homepage": "https://github.com/AVGP/susi/blob/master/README.md",
-  "author": "Martin Naumann <mr.avgp@gmail.com>",
+  "author": "Martin Naumann <the@geekonaut.de>",
   "license": "ISC",
   "bin": { "susi": "./susi" }
 }

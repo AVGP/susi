@@ -1,0 +1,14 @@
+{
+  "name": "susisi",
+  "version": "0.0.0",
+  "description": "Super Simple Site generator.",
+  "main": "susisi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "marked": "0.3.2"  
+  },
+  "author": "Martin Naumann",
+  "license": "ISC"
+}

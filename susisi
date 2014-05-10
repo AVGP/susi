@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+var fs = require('fs'),
+    md = require('marked');
+
+var args = process.argv.slice(2);
+
+function stripExtension(fileName) {
+  return fileName.substr(0, fileName.lastIndexOf('.'))
+}
+
+function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
+  fs.readFile(inputFilePath, 'utf8', function(fileErr, content) {
+    var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
+    fs.writeFile(outputFilePath, parsedContent, 'utf8');
+  });
+}
+
+function convertFilesInPath(inputPath, outputPath, layoutPath) {
+  var layoutHTML = '{{CONTENT}}';
+  if(layoutPath) {
+    layoutHTML = fs.readFileSync(layoutPath, 'utf8');
+  }
+  
+  fs.readdir('input', function(pathErr, files) {
+    files.forEach(function(file) {
+      if(file.substr(-2) != 'md') return;
+      renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html', layoutHTML);
+    });
+  });
+}
+
+convertFilesInPath(args[0], args[1], args[2]);

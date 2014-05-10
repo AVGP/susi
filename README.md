@@ -1,7 +1,8 @@
 # SuSiSi
 ## Because static site generation shouldn't be rocket science.
 
-This is the **Su**per **Si**mple **Si**te generator.
+
+This is the **Su**&#8203;per **Si**&#8203;mple **Si**&#8203;te generator.
 
 You give it markdown files and (if you fancy) an HTML layout to render them into - and it gives you static HTML.
 

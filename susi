@@ -4,7 +4,7 @@ var fs = require('fs'),
     md = require('marked');
 
 md.setOptions({
-  renderer: new marked.Renderer(),
+  renderer: new md.Renderer(),
   gfm:         true,
   tables:      true,
   breaks:      true,

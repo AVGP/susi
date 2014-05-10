@@ -11,6 +11,15 @@ function stripExtension(fileName) {
 
 function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
   fs.readFile(inputFilePath, 'utf8', function(fileErr, content) {
+    var titleCommentMatches = content.match(/^<!-- (.*) -->\n/),
+        title               = '';
+    if(titleCommentMatches) {
+      title   = titleCommentMatches[1];
+      content = content.replace(/^<!-- (.*) -->\n/, '');
+    }
+
+    layoutHTML = layoutHTML.replace('{{TITLE}}', title);
+
     var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
     fs.writeFile(outputFilePath, parsedContent, 'utf8');
   });

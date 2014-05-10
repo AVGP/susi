@@ -1,11 +1,8 @@
 {
   "name": "susisi",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Super Simple Site generator.",
-  "main": "susisi.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "susisi",
   "dependencies": {
     "marked": "0.3.2"  
   },

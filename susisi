@@ -24,7 +24,11 @@ function convertFilesInPath(inputPath, outputPath, layoutPath) {
   
   fs.readdir(inputPath, function(pathErr, files) {
     files.forEach(function(file) {
-      if(file.substr(-2) != 'md') return;
+      if(fs.lstatSync(inputPath + '/' + file).isDirectory()) {
+        convertFilesInPath(inputPath + '/' + file, outputPath + '/' + file, layoutPath); 
+        return;
+      } else if(file.substr(-2) != 'md') return;
+
       renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html', layoutHTML);
     });
   });

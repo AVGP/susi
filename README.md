@@ -124,6 +124,7 @@ in combination with
 ```
 
 will turn the title into ``My Site - Title``.
+
 **Note:** The comment must be the first thing on the first line of your markdown file or title injection will not work.
 
 Now, seriously, go make static websites!

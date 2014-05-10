@@ -1,8 +1,8 @@
 {
-  "name": "susisi",
-  "version": "0.0.2",
+  "name": "susi",
+  "version": "0.1.0",
   "description": "Super Simple Site generator.",
-  "main": "susisi",
+  "main": "susi",
   "dependencies": {
     "marked": "0.3.2"  
   },

@@ -1,4 +1,4 @@
-# SuSiSi
+# SuSi<sup>2</sup>
 ## Because static site generation shouldn't be rocket science.
 
 
@@ -14,13 +14,13 @@ No magic, no fancy build tools - Markdown and HTML. Now go and make that website
 To setup, you run
 
 ```shell
-    npm install -g susisi
+    npm install -g susi
 ```
 
 and then to parse markdown files into HTML you can use for example:
 
 ```shell
-    susisi /var/www/markdown /var/www/html
+    susi /var/www/markdown /var/www/html
 ```
 
 ## Using a layout
@@ -49,11 +49,11 @@ Say you have a layout with a few navigation links and some css like this:
   </html>
 ```
 
-When you pass in the path to this file as the third parameter, SuSiSi will render each markdown file into the place of ``{{CONTENT}}``.
+When you pass in the path to this file as the third parameter, SuSi will render each markdown file into the place of ``{{CONTENT}}``.
 So if you do:
 
 ```shell
-  susisi input/ output/ path/to/layout.html
+  susi input/ output/ path/to/layout.html
 ```
 
 A markdown file like this:

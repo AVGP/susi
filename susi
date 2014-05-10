@@ -3,6 +3,17 @@
 var fs = require('fs'),
     md = require('marked');
 
+md.setOptions({
+  renderer: new marked.Renderer(),
+  gfm:         true,
+  tables:      true,
+  breaks:      true,
+  pedantic:    false,
+  sanitize:    false,
+  smartLists:  true,
+  smartypants: false
+});
+
 var args = process.argv.slice(2);
 
 function stripExtension(fileName) {

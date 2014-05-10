@@ -2,10 +2,13 @@
   "name": "susi",
   "version": "0.1.0",
   "description": "Super Simple Site generator.",
+  "keywords": [ "static site generator", "generator", "static", "markdown", "website", "generator" ],
   "main": "susi",
   "dependencies": {
     "marked": "0.3.2"  
   },
-  "author": "Martin Naumann",
-  "license": "ISC"
+  "homepage": "https://github.com/AVGP/susi/blob/master/README.md",
+  "author": "Martin Naumann <mr.avgp@gmail.com>",
+  "license": "ISC",
+  "bin": { "susi": "./susi" }
 }

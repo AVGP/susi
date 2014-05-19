@@ -9,6 +9,8 @@ You give it markdown files and (if you fancy) an HTML layout to render them into
 That's it.
 No magic, no fancy build tools - Markdown and HTML. Now go and make that website!
 
+![](https://googledrive.com/host/0B9MEoZDi5-peRTF3WE0tQmhIT0U/SuSi.gif)
+
 ## How to use it
 
 To setup, you run

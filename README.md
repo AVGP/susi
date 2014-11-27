@@ -37,7 +37,7 @@ Say you have a layout with a few navigation links and some css like this:
   <html>
     <head>
       <link rel="stylesheet" href="style.css">
-      <title>My Site</title>
+      <title>{{title}}</title>
     </head>
     <body>
       <nav>
@@ -46,16 +46,16 @@ Say you have a layout with a few navigation links and some css like this:
           <li><a href='projects.html'>Projects</a></li>
           <li><a href='contact.html'>Contact</a></li>
       </nav>
-      <section id="main">{{CONTENT}}</section>
+      <section id="main">{{contents}}</section>
     </body>
   </html>
 ```
 
-When you pass in the path to this file as the third parameter, SuSi will render each markdown file into the place of ``{{CONTENT}}``.
+When you pass in the path to this files directory as the third parameter, SuSi will render each markdown file into the place of ``{{contents}}``.
 So if you do:
 
 ```shell
-  susi input/ output/ path/to/layout.html
+  susi input/ output/ path/to/layout/
 ```
 
 A markdown file like this:
@@ -91,42 +91,51 @@ will be rendered into:
 
 which is pretty handy.
 
-### Using titles
-There is also a second placeholder, ``{{TITLE}}`` which can be used to adjust the title for pages individually.
+Each markdown file is expected to have a 
 
-Here is an example:
+### Using Frontmatter
 
-```html
-  <!doctype html>
-  <html>
-    <head>
-      <link rel="stylesheet" href="style.css">
-      <title>My Site {{TITLE}}</title>
-    </head>
-    <body>
-      <nav>
-        <ul>
-          <li><a href='home.html'>Home</a></li>
-          <li><a href='projects.html'>Projects</a></li>
-          <li><a href='contact.html'>Contact</a></li>
-      </nav>
-      <section id="main">
-        <h1>Home</h1>
-        <p>Some <em>text</em></p>
-      </section>
-    </body>
-  </html>
+Each markdown file is expected to have a a frontmatter section formatted in JSON like so:
+
+{
+  "title": "new site gen",
+  "date": "2014-11-27",
+  "layout:" "page"
+}
+---
+
+with the triple dash seperating the frontmatter from the markdown formatted text.
+
+The layout attribute will be used to look for a file with a matching name and ".html" suffix in the directory
+specified as the third parameter on the commandline to susi.
+
+Of course additional, custom attributes can be optionally included in the frontmatter json and can then be used 
+in all the html layout files using the handlebars style syntax.
+
+### Simple Includes
+
+The html layout files can use the Apache SSI style html comment "include" directive to pull in other layout files
+to provide basica support for "partials", eg.
+
 ```
-in combination with
+ <!--#include virtual="meta.html" -->
+ 
+ <!--#include virtual="header.html" -->
+ 
+    <div class="container">
+      <div class="starter-template">
+        <h1>{{title}}</h1>
+        <p class="lead">
+          {{contents}}
+        </p>
+      </div>
 
-```markdown
-  <!-- - Home -->
-  # Home
-  Some *text*
+    </div><!-- /.container -->
+    
+    <!--#include virtual="footer.html" -->
 ```
 
-will turn the title into ``My Site - Title``.
-
-**Note:** The comment must be the first thing on the first line of your markdown file or title injection will not work.
+Note that the included files can use the handlebars syntax as well, as they will be resolved after all the include directives
+have been processed.
 
 Now, seriously, go make static websites!

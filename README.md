@@ -96,15 +96,16 @@ Each markdown file is expected to have a
 ### Using Frontmatter
 
 Each markdown file is expected to have a a frontmatter section formatted in JSON like so:
-
+```json
 {
   "title": "new site gen",
   "date": "2014-11-27",
   "layout:" "page"
 }
----
+```
+```---```
 
-with the triple dash seperating the frontmatter from the markdown formatted text.
+with a triple dash seperating the frontmatter from the markdown formatted text.
 
 The layout attribute will be used to look for a file with a matching name and ".html" suffix in the directory
 specified as the third parameter on the commandline to susi.
@@ -117,7 +118,8 @@ in all the html layout files using the handlebars style syntax.
 The html layout files can use the Apache SSI style html comment "include" directive to pull in other layout files
 to provide basica support for "partials", eg.
 
-```
+```html
+
  <!--#include virtual="meta.html" -->
  
  <!--#include virtual="header.html" -->

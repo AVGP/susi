@@ -1,53 +1,78 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-      stmd = require('./libs/commonmark/stmd');
+      stmd = require('./libs/commonmark/stmd'),
+      moment = require('moment'),
+      ssiParser = require('./libs/ssi-parser'),
+      hairlip = require('./libs/hairlip');
 
 var args = process.argv.slice(2);
+var layoutPathPrefix = args[2]; //expect it to have trailing slash
 
 function stripExtension(fileName) {
   return fileName.substr(0, fileName.lastIndexOf('.'))
 }
 
-function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
+function renderToHtml(inputFilePath, outputFilePath) {
   fs.readFile(inputFilePath, 'utf8', function(fileErr, content) {
-    var titleCommentMatches = content.match(/^<!-- (.*) -->\n/),
-        title               = '';
-    if(titleCommentMatches) {
-      title   = titleCommentMatches[1];
-      content = content.replace(/^<!-- (.*) -->\n/, '');
-    }
-
-    layoutHTML = layoutHTML.replace('{{TITLE}}', title);
-
+    var res = getJSONFM(content);
+    var frontmatter = res[0];
+    content = res[1];
+    frontmatter.date = frontmatter.date ? moment(frontmatter.date).format('MMMM Do YYYY') : moment().format('MMMM Do YYYY');
+    console.error("frontmatter date:"+frontmatter.date);
+    frontmatter.layout = frontmatter.layout || "page"; //default to page layout
+    var layoutHTML = fs.readFileSync(layoutPathPrefix+frontmatter.layout+".html", 'utf8');
+    //first pull in all includes in html
+    layoutHTML = ssiParser(layoutPathPrefix+"/dummy", layoutHTML); //needs file path not just dir, hence dummy
+    
     var parser   = new stmd.DocParser();
     var renderer = new stmd.HtmlRenderer();
-    var parsedContent = renderer.render(parser.parse(content));
-    parsedContent = layoutHTML.replace('{{CONTENT}}', parsedContent);
-    fs.writeFile(outputFilePath, parsedContent, 'utf8');
+    frontmatter.contents = renderer.render(parser.parse(content));
+    
+    //and then parse through for "mustachey" syntax...
+    var finalHTML = hairlip(frontmatter, String(layoutHTML));
+    fs.writeFile(outputFilePath, finalHTML, 'utf8');
   });
 }
 
-function convertFilesInPath(inputPath, outputPath, layoutPath) {
+function convertFilesInPath(inputPath, outputPath) {
   var layoutHTML = '{{CONTENT}}';
-  if(layoutPath) {
-    layoutHTML = fs.readFileSync(layoutPath, 'utf8');
-  }
   
   fs.readdir(inputPath, function(pathErr, files) {
     files.forEach(function(file) {
       if(fs.lstatSync(inputPath + '/' + file).isDirectory()) {
-        convertFilesInPath(inputPath + '/' + file, outputPath + '/' + file, layoutPath); 
+        convertFilesInPath(inputPath + '/' + file, outputPath + '/' + file); 
         return;
-      } else if(file.substr(-2) != 'md') return;
+      } else if (file.substr(-2) != 'md') {
+        return;
+      }
 
       if(!fs.existsSync(outputPath)) { 
         fs.mkdirSync(outputPath);
       }
 
-      renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html', layoutHTML);
+      renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html');
     });
   });
 }
 
-convertFilesInPath(args[0], args[1], args[2]);
+
+/**
+  * returns an array, first object is the JSON frontmatter as an object, second is the
+  * text with the front matter stripped out
+  */
+function getJSONFM(data) {
+  //strip out json front-matter
+  var parts = data.split(/---/);
+  if (parts[0].length < 1) {
+    throw new Error("missing frontmatter");
+  }
+  try {
+    var jsonFM = JSON.parse(parts[0]);
+  } catch(e) {
+    console.error("err parsing json:"+parts[0], e);
+  }
+  return [jsonFM, parts[1]];
+}
+
+convertFilesInPath(args[0], args[1]);

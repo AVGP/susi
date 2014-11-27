@@ -5,7 +5,7 @@
   "keywords": [ "static site generator", "generator", "static", "markdown", "website", "generator" ],
   "main": "susi",
   "dependencies": {
-      
+      "moment": "2.8.3"
   },
   "homepage": "https://github.com/AVGP/susi/blob/master/README.md",
   "author": "Martin Naumann <the@geekonaut.de>",

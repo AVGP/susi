@@ -1,18 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-    md = require('marked');
-
-md.setOptions({
-  renderer: new md.Renderer(),
-  gfm:         true,
-  tables:      true,
-  breaks:      true,
-  pedantic:    false,
-  sanitize:    false,
-  smartLists:  true,
-  smartypants: false
-});
+      stmd = require('./libs/commonmark/stmd');
 
 var args = process.argv.slice(2);
 
@@ -31,7 +20,10 @@ function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
 
     layoutHTML = layoutHTML.replace('{{TITLE}}', title);
 
-    var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
+    var parser   = new stmd.DocParser();
+    var renderer = new stmd.HtmlRenderer();
+    var parsedContent = renderer.render(parser.parse(content));
+    parsedContent = layoutHTML.replace('{{CONTENT}}', parsedContent);
     fs.writeFile(outputFilePath, parsedContent, 'utf8');
   });
 }

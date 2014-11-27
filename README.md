@@ -103,9 +103,8 @@ Each markdown file is expected to have a a frontmatter section formatted in JSON
   "layout:" "page"
 }
 ```
-```---```
 
-with a triple dash seperating the frontmatter from the markdown formatted text.
+Note a triple dash '---' on a new line is **required** to seperate the frontmatter from the markdown formatted text.
 
 The layout attribute will be used to look for a file with a matching name and ".html" suffix in the directory
 specified as the third parameter on the commandline to susi.

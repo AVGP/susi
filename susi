@@ -1,61 +1,82 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-    md = require('marked');
-
-md.setOptions({
-  renderer: new md.Renderer(),
-  gfm:         true,
-  tables:      true,
-  breaks:      true,
-  pedantic:    false,
-  sanitize:    false,
-  smartLists:  true,
-  smartypants: false
-});
+      commonmark = require('commonmark'),
+      moment = require('moment'),
+      ssiParser = require('tiny-ssi'),
+      hairlip = require('hairlip');
 
 var args = process.argv.slice(2);
+var layoutPathPrefix = args[2]; //expect it to have trailing slash
 
 function stripExtension(fileName) {
-  return fileName.substr(0, fileName.lastIndexOf('.'))
+  return fileName.substr(0, fileName.lastIndexOf('.'));
 }
 
-function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
-  fs.readFile(inputFilePath, 'utf8', function(fileErr, content) {
-    var titleCommentMatches = content.match(/^<!-- (.*) -->\n/),
-        title               = '';
-    if(titleCommentMatches) {
-      title   = titleCommentMatches[1];
-      content = content.replace(/^<!-- (.*) -->\n/, '');
-    }
-
-    layoutHTML = layoutHTML.replace('{{TITLE}}', title);
-
-    var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
-    fs.writeFile(outputFilePath, parsedContent, 'utf8');
+function renderToHtml(inputFilePath, outputFilePath) {
+  fs.readFile(inputFilePath, 'utf8', function(fileErr, fileContent) {
+    var res = processMarkupContent(fileContent);
+    res.frontmatter.date = res.frontmatter.date ? moment(res.frontmatter.date).format('MMMM Do YYYY') : moment().format('MMMM Do YYYY');
+    res.frontmatter.layout = res.frontmatter.layout || "page"; //default to page layout
+    var layoutHTML = fs.readFileSync(layoutPathPrefix+res.frontmatter.layout+".html", 'utf8');
+    //first pull in all includes in html
+    layoutHTML = ssiParser(layoutPathPrefix+"/dummy", layoutHTML); //needs file path not just dir, hence dummy
+    
+    var parser   = new commonmark.DocParser();
+    var renderer = new commonmark.HtmlRenderer();
+    res.frontmatter.contents = renderer.render(parser.parse(res.content));
+    
+    //and then parse through for "mustache-y" syntax...
+    var finalHTML = hairlip(res.frontmatter, String(layoutHTML));
+    fs.writeFile(outputFilePath, finalHTML, 'utf8');
+    console.log("converted: "+inputFilePath+"->"+outputFilePath);
   });
 }
 
-function convertFilesInPath(inputPath, outputPath, layoutPath) {
-  var layoutHTML = '{{CONTENT}}';
-  if(layoutPath) {
-    layoutHTML = fs.readFileSync(layoutPath, 'utf8');
-  }
+function convertFilesInPath(inputPath, outputPath) {
+  
+  //make sure paths are slash terminated
+  inputPath = (inputPath.lastIndexOf('/') === inputPath.length -1) ? inputPath : inputPath + '/' ;
+  outputPath = (outputPath.lastIndexOf('/') === outputPath.length -1) ? outputPath : outputPath + '/' ;
   
   fs.readdir(inputPath, function(pathErr, files) {
     files.forEach(function(file) {
-      if(fs.lstatSync(inputPath + '/' + file).isDirectory()) {
-        convertFilesInPath(inputPath + '/' + file, outputPath + '/' + file, layoutPath); 
+      if(fs.lstatSync(inputPath + file).isDirectory()) {
+        convertFilesInPath(inputPath + file, outputPath+ file); 
         return;
-      } else if(file.substr(-2) != 'md') return;
+      } else if (file.substr(-2) != 'md') {
+        return;
+      }
 
       if(!fs.existsSync(outputPath)) { 
         fs.mkdirSync(outputPath);
       }
 
-      renderToHtml(inputPath + '/' + file, outputPath + '/' + stripExtension(file) + '.html', layoutHTML);
+      renderToHtml(inputPath+ file, outputPath + stripExtension(file) + '.html');
     });
   });
 }
 
-convertFilesInPath(args[0], args[1], args[2]);
+/**
+  * returns an array, first object is the JSON frontmatter as an object, second is the
+  * text with the front matter stripped out
+  */
+function processMarkupContent(data) {
+  //strip out json front-matter
+  var parts = data.split(/---/);
+  var jsonFM;
+  if (parts[0].length < 1) {
+    throw new Error("missing frontmatter");
+  }
+  try {
+    jsonFM = JSON.parse(parts[0]);
+  } catch(e) {
+    console.error("err parsing json:"+parts[0], e);
+  }
+  return {
+    frontmatter : jsonFM, 
+    content: parts[1]
+  };
+}
+
+convertFilesInPath(args[0], args[1]);

@@ -22,12 +22,12 @@ To setup, you run
 and then to parse markdown files into HTML you can use for example:
 
 ```shell
-    susi /var/www/markdown /var/www/html
+    susi /var/www/markdown /var/www/html  /var/www/layouts
 ```
 
 ## Using a layout
 
-Now parsing naked Markdown files into naked HTML often isn't enough, so there's the layout option.
+Now parsing naked Markdown files into naked HTML often isn't enough, so there's the layouts which you pass in as the third parameter.
 
 ### A basic layout
 Say you have a layout with a few navigation links and some css like this:
@@ -46,6 +46,8 @@ Say you have a layout with a few navigation links and some css like this:
           <li><a href='projects.html'>Projects</a></li>
           <li><a href='contact.html'>Contact</a></li>
       </nav>
+      <h1>{{title}}</h1>
+      <h2>{{date}}</h2>
       <section id="main">{{contents}}</section>
     </body>
   </html>
@@ -59,10 +61,15 @@ So if you do:
 ```
 
 A markdown file like this:
-
+```json
+{
+  "title": "My Site",
+  "date": "2014-11-27"
+}
+```
+`---`
 ```markdown
-  # Home
-  Some *text*
+  Some *text* of mine.
 ```
 
 will be rendered into:
@@ -82,8 +89,9 @@ will be rendered into:
           <li><a href='contact.html'>Contact</a></li>
       </nav>
       <section id="main">
-        <h1>Home</h1>
-        <p>Some <em>text</em></p>
+        <h1>My Site</h1>
+        <h2>2014-11-27</h2>
+        <p>Some <em>text</em>of mine.</p>
       </section>
     </body>
   </html>
@@ -104,18 +112,18 @@ Each markdown file is expected to have a a frontmatter section formatted in JSON
 }
 ```
 
-Note a triple dash '---' on a new line is **required** to seperate the frontmatter from the markdown formatted text.
+*Note:* a triple dash '---' on a new line is **required** to seperate the frontmatter from the markdown formatted text.
 
 The layout attribute will be used to look for a file with a matching name and ".html" suffix in the directory
 specified as the third parameter on the commandline to susi.
 
 Of course additional, custom attributes can be optionally included in the frontmatter json and can then be used 
-in all the html layout files using the handlebars style syntax.
+in all the html layout files using the "Mustache" style syntax.
 
 ### Simple Includes
 
-The html layout files can use the Apache SSI style html comment "include" directive to pull in other layout files
-to provide basica support for "partials", eg.
+The html layout files can use the [Apache SSI style html comment "include" directive](http://httpd.apache.org/docs/2.2/mod/mod_include.html#element.include)
+to pull in other layout files to provide basica support for "partials", to help keep things DRY, eg.
 
 ```html
 
@@ -136,7 +144,7 @@ to provide basica support for "partials", eg.
     <!--#include virtual="footer.html" -->
 ```
 
-Note that the included files can use the handlebars syntax as well, as they will be resolved after all the include directives
+*Note:* the "included" files can use the "Mustache" syntax as well, as they will be resolved after all the include directives
 have been processed.
 
 Now, seriously, go make static websites!

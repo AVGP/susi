@@ -3,7 +3,7 @@
 var fs = require('fs'),
       commonmark = require('commonmark'),
       moment = require('moment'),
-      ssiParser = require('./libs/ssi-parser'),
+      ssiParser = require('tiny-ssi'),
       hairlip = require('hairlip');
 
 var args = process.argv.slice(2);

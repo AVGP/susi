@@ -1,14 +1,15 @@
 {
   "name": "susi",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Super Simple Site generator.",
   "keywords": [ "static site generator", "generator", "static", "markdown", "website", "generator" ],
   "main": "susi",
   "dependencies": {
-      "moment": "2.8.3"
+      "moment": "2.8.3",
+      "commonmark": "0.12.0"
   },
-  "homepage": "https://github.com/AVGP/susi/blob/master/README.md",
-  "author": "Martin Naumann <the@geekonaut.de>",
+  "homepage": "https://github.com/maks/susi/blob/master/README.md",
+  "author": ["Martin Naumann <the@geekonaut.de>", "Maksim Lin <maks@manichord.com"],
   "license": "ISC",
   "bin": { "susi": "./susi" }
 }

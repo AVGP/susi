@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-      stmd = require('./libs/commonmark/stmd'),
+      commonmark = require('commonmark'),
       moment = require('moment'),
       ssiParser = require('./libs/ssi-parser'),
       hairlip = require('./libs/hairlip');
@@ -25,8 +25,8 @@ function renderToHtml(inputFilePath, outputFilePath) {
     //first pull in all includes in html
     layoutHTML = ssiParser(layoutPathPrefix+"/dummy", layoutHTML); //needs file path not just dir, hence dummy
     
-    var parser   = new stmd.DocParser();
-    var renderer = new stmd.HtmlRenderer();
+    var parser   = new commonmark.DocParser();
+    var renderer = new commonmark.HtmlRenderer();
     frontmatter.contents = renderer.render(parser.parse(content));
     
     //and then parse through for "mustachey" syntax...

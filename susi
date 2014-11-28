@@ -4,7 +4,7 @@ var fs = require('fs'),
       commonmark = require('commonmark'),
       moment = require('moment'),
       ssiParser = require('./libs/ssi-parser'),
-      hairlip = require('./libs/hairlip');
+      hairlip = require('hairlip');
 
 var args = process.argv.slice(2);
 var layoutPathPrefix = args[2]; //expect it to have trailing slash

@@ -6,7 +6,8 @@
   "main": "susi",
   "dependencies": {
       "moment": "2.8.3",
-      "commonmark": "0.12.0"
+      "commonmark": "0.12.0",
+      "hairlip": "0.0.1"
   },
   "homepage": "https://github.com/maks/susi/blob/master/README.md",
   "author": ["Martin Naumann <the@geekonaut.de>", "Maksim Lin <maks@manichord.com"],

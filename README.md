@@ -19,11 +19,19 @@ To setup, you run
     npm install -g susi
 ```
 
-and then to parse markdown files into HTML you can use for example:
+and then to parse markdown files into HTML you can use:
 
 ```shell
-    susi /var/www/markdown /var/www/html  /var/www/layouts
+    susi directory/with/markdown_files/ output_directory/ path/to/layout.html
 ```
+
+So, for example:
+
+```shell
+    susi /var/www/markdown /var/www/html  /var/www/layout.html
+```
+
+will parse all markdown files in `/var/www/markdown/` and will create corresponding HTML files in `/var/www/html/` using the `/var/www/layout.html` file.
 
 ## Using a layout
 

@@ -1,6 +1,6 @@
 {
   "name": "susi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Super Simple Site generator.",
   "keywords": [ "static site generator", "generator", "static", "markdown", "website", "generator" ],
   "main": "susi",

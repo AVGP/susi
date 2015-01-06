@@ -37,6 +37,8 @@ will parse all markdown files in `/var/www/markdown/` and will create correspond
 
 Now parsing naked Markdown files into naked HTML often isn't enough, so there's the layouts which you pass in as the third parameter.
 
+At least create a single layout file called `page.html`.
+
 ### A basic layout
 Say you have a layout with a few navigation links and some css like this:
 
@@ -120,7 +122,9 @@ Each markdown file is expected to have a a frontmatter section formatted in JSON
 }
 ```
 
-*Note:* a triple dash '---' on a new line is **required** to seperate the frontmatter from the markdown formatted text.
+*Note:* A triple dash '---' on a new line is **required** to seperate the frontmatter from the markdown formatted text.
+
+*Note:* You may leave out the `layout` field, which then defaults to `page`.
 
 The layout attribute will be used to look for a file with a matching name and ".html" suffix in the directory
 specified as the third parameter on the commandline to susi.

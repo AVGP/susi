@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-      commonmark = require('commonmark'),
-      moment = require('moment'),
-      ssiParser = require('tiny-ssi'),
-      hairlip = require('hairlip');
+    commonmark = require('commonmark'),
+    moment = require('moment'),
+    ssiParser = require('tiny-ssi'),
+    hairlip = require('hairlip'),
+    path = require('path');
 
 var args = process.argv.slice(2);
-var layoutPathPrefix = args[2]; //expect it to have trailing slash
+var layoutPathPrefix = path.resolve(args[2]); //expect it to have trailing slash
+
+if(layoutPathPrefix.slice(-1) !== '/') layoutPathPrefix += '/';
 
 function stripExtension(fileName) {
   return fileName.substr(0, fileName.lastIndexOf('.'));
@@ -39,7 +42,7 @@ function convertFilesInPath(inputPath, outputPath) {
   inputPath = (inputPath.lastIndexOf('/') === inputPath.length -1) ? inputPath : inputPath + '/' ;
   outputPath = (outputPath.lastIndexOf('/') === outputPath.length -1) ? outputPath : outputPath + '/' ;
   
-  fs.readdir(inputPath, function(pathErr, files) {
+  fs.readdir(path.resolve(inputPath), function(pathErr, files) {
     files.forEach(function(file) {
       if(fs.lstatSync(inputPath + file).isDirectory()) {
         convertFilesInPath(inputPath + file, outputPath+ file); 

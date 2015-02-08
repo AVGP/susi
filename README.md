@@ -160,3 +160,11 @@ to pull in other layout files to provide basica support for "partials", to help 
 have been processed.
 
 Now, seriously, go make static websites!
+
+# License
+SuSi is available under the [ISC License](LICENSE).
+
+# Contributing
+If you have any suggestions, found bugs or want a new feature, don't hesitate to submit a pull request or open an issue.
+
+Pull requests are always welcome, no matter how small. But if you're about to create large, sweeping changes, I suggest opening an issue *before* making those changes to check, if they're making sense in the scope of the project and to discuss them to avoid later frustration.

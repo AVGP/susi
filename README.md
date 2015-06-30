@@ -69,15 +69,17 @@ So if you do:
 ```
 
 A markdown file like this:
-```json
+```markdown
 {
   "title": "My Site",
   "date": "2014-11-27"
 }
-```
-`---`
-```markdown
-  Some *text* of mine.
+
+---
+
+# Some headline
+
+Some *text* of mine.
 ```
 
 will be rendered into:
@@ -107,7 +109,7 @@ will be rendered into:
 
 which is pretty handy.
 
-Each markdown file is expected to have a 
+Each markdown file is expected to have a
 
 ### Using Frontmatter
 
@@ -127,7 +129,7 @@ Each markdown file is expected to have a a frontmatter section formatted in JSON
 The layout attribute will be used to look for a file with a matching name and ".html" suffix in the directory
 specified as the third parameter on the commandline to susi.
 
-Of course additional, custom attributes can be optionally included in the frontmatter json and can then be used 
+Of course additional, custom attributes can be optionally included in the frontmatter json and can then be used
 in all the html layout files using the "Mustache" style syntax.
 
 ### Simple Includes
@@ -138,9 +140,9 @@ to pull in other layout files to provide basica support for "partials", to help 
 ```html
 
  <!--#include virtual="meta.html" -->
- 
+
  <!--#include virtual="header.html" -->
- 
+
     <div class="container">
       <div class="starter-template">
         <h1>{{title}}</h1>
@@ -150,7 +152,7 @@ to pull in other layout files to provide basica support for "partials", to help 
       </div>
 
     </div><!-- /.container -->
-    
+
     <!--#include virtual="footer.html" -->
 ```
 

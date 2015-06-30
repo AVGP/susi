@@ -19,39 +19,44 @@ function stripExtension(fileName) {
 function renderToHtml(inputFilePath, outputFilePath) {
   fs.readFile(inputFilePath, 'utf8', function(fileErr, fileContent) {
     var res = processMarkupContent(fileContent);
-    res.frontmatter.date = res.frontmatter.date ? moment(res.frontmatter.date).format('MMMM Do YYYY') : moment().format('MMMM Do YYYY');
-    res.frontmatter.layout = res.frontmatter.layout || "page"; //default to page layout
-    var layoutHTML = fs.readFileSync(layoutPathPrefix+res.frontmatter.layout+".html", 'utf8');
-    //first pull in all includes in html
-    layoutHTML = ssiParser(layoutPathPrefix+"/dummy", layoutHTML); //needs file path not just dir, hence dummy
-    
-    var parser   = new commonmark.DocParser();
-    var renderer = new commonmark.HtmlRenderer();
-    res.frontmatter.contents = renderer.render(parser.parse(res.content));
-    
-    //and then parse through for "mustache-y" syntax...
-    var finalHTML = hairlip(res.frontmatter, String(layoutHTML));
-    fs.writeFile(outputFilePath, finalHTML, 'utf8');
-    console.log("converted: "+inputFilePath+"->"+outputFilePath);
+    if(res.frontmatter) {
+      res.frontmatter.date = res.frontmatter.date ? moment(res.frontmatter.date).format('MMMM Do YYYY') : moment().format('MMMM Do YYYY');
+      res.frontmatter.layout = res.frontmatter.layout || "page"; //default to page layout
+      var layoutHTML = fs.readFileSync(layoutPathPrefix+res.frontmatter.layout+".html", 'utf8');
+      //first pull in all includes in html
+      layoutHTML = ssiParser(layoutPathPrefix+"/dummy", layoutHTML); //needs file path not just dir, hence dummy
+
+      var parser   = new commonmark.DocParser();
+      var renderer = new commonmark.HtmlRenderer();
+      res.frontmatter.contents = renderer.render(parser.parse(res.content));
+
+      //and then parse through for "mustache-y" syntax...
+      var finalHTML = hairlip(res.frontmatter, String(layoutHTML));
+
+      fs.writeFile(outputFilePath, finalHTML, 'utf8');
+      console.log("converted: "+inputFilePath+"->"+outputFilePath);
+    } else {
+      console.warn(inputFilePath + " is missing the Frontmatter section!")
+    }
   });
 }
 
 function convertFilesInPath(inputPath, outputPath) {
-  
+
   //make sure paths are slash terminated
   inputPath = (inputPath.lastIndexOf('/') === inputPath.length -1) ? inputPath : inputPath + '/' ;
   outputPath = (outputPath.lastIndexOf('/') === outputPath.length -1) ? outputPath : outputPath + '/' ;
-  
+
   fs.readdir(path.resolve(inputPath), function(pathErr, files) {
     files.forEach(function(file) {
       if(fs.lstatSync(inputPath + file).isDirectory()) {
-        convertFilesInPath(inputPath + file, outputPath+ file); 
+        convertFilesInPath(inputPath + file, outputPath+ file);
         return;
       } else if (file.substr(-2) != 'md') {
         return;
       }
 
-      if(!fs.existsSync(outputPath)) { 
+      if(!fs.existsSync(outputPath)) {
         fs.mkdirSync(outputPath);
       }
 
@@ -74,10 +79,10 @@ function processMarkupContent(data) {
   try {
     jsonFM = JSON.parse(parts[0]);
   } catch(e) {
-    console.error("err parsing json:"+parts[0], e);
+    console.error("[frontmatter] err parsing json:"+parts[0], e);
   }
   return {
-    frontmatter : jsonFM, 
+    frontmatter : jsonFM,
     content: parts[1]
   };
 }

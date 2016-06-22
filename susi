@@ -81,9 +81,10 @@ function processMarkupContent(data) {
   } catch(e) {
     console.error("[frontmatter] err parsing json:"+parts[0], e);
   }
+  parts.shift();
   return {
     frontmatter : jsonFM,
-    content: parts[1]
+    content: parts.join('---')
   };
 }
 

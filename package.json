@@ -6,7 +6,7 @@
   "main": "susi",
   "dependencies": {
       "moment": "2.8.3",
-      "commonmark": "0.12.0",
+      "commonmark": "0.25.1",
       "hairlip": "0.0.1",
       "tiny-ssi" : "0.0.2"
   },

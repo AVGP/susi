@@ -26,7 +26,7 @@ function renderToHtml(inputFilePath, outputFilePath) {
       //first pull in all includes in html
       layoutHTML = ssiParser(layoutPathPrefix+"/dummy", layoutHTML); //needs file path not just dir, hence dummy
 
-      var parser   = new commonmark.DocParser();
+      var parser   = new commonmark.Parser();
       var renderer = new commonmark.HtmlRenderer();
       res.frontmatter.contents = renderer.render(parser.parse(res.content));
 
@@ -81,9 +81,10 @@ function processMarkupContent(data) {
   } catch(e) {
     console.error("[frontmatter] err parsing json:"+parts[0], e);
   }
+  parts.shift();
   return {
     frontmatter : jsonFM,
-    content: parts[1]
+    content: parts.join('---')
   };
 }
 

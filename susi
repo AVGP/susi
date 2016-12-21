@@ -29,7 +29,7 @@ function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
       content = content.replace(/^<!-- (.*) -->\n/, '');
     }
 
-    layoutHTML = layoutHTML.replace('{{TITLE}}', title);
+    layoutHTML = layoutHTML.replace(/{{TITLE}}/g, title);
 
     var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
     fs.writeFile(outputFilePath, parsedContent, 'utf8');

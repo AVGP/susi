@@ -32,7 +32,7 @@ function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
     layoutHTML = layoutHTML.replace(/{{TITLE}}/g, title);
 
     var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
-    fs.writeFile(outputFilePath, parsedContent, 'utf8');
+    fs.writeFile(outputFilePath, parsedContent, 'utf8', function () { /* ignored */ });
   });
 }
 

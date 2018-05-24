@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-    md = require('marked');
+    md = require('marked'),
+    path = require('path');
 
 md.setOptions({
   renderer: new md.Renderer(),
@@ -29,7 +30,7 @@ function renderToHtml(inputFilePath, outputFilePath, layoutHTML) {
       content = content.replace(/^<!-- (.*) -->\n/, '');
     }
 
-    layoutHTML = layoutHTML.replace(/{{TITLE}}/g, title);
+    layoutHTML = layoutHTML.replace(/{{TITLE}}/g, title).replace(/{{SLUG}}/g, stripExtension(path.basename(outputFilePath)));
 
     var parsedContent = layoutHTML.replace('{{CONTENT}}', md(content));
     fs.writeFile(outputFilePath, parsedContent, 'utf8', function () { /* ignored */ });
